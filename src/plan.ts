@@ -7,6 +7,8 @@ export type SkuRole = 'hero' | 'core' | 'trend'
 export interface ColorwayBuy {
   colorway: string
   sizes: Record<string, number>
+  /** Swatch colour for the UI, #rrggbb lower-case. */
+  hex?: string
 }
 
 export interface PlanSku {
@@ -141,7 +143,15 @@ function parseSku(raw: unknown, index: number, issues: string[]): PlanSku {
           sizes[size] = units
         }
       }
-      buy.push({ colorway: text(entry.colorway, `${at}.colorway`, issues, 80), sizes })
+      const hex =
+        typeof entry.hex === 'string' && /^#[0-9a-f]{6}$/i.test(entry.hex)
+          ? entry.hex.toLowerCase()
+          : undefined
+      buy.push({
+        colorway: text(entry.colorway, `${at}.colorway`, issues, 80),
+        sizes,
+        ...(hex ? { hex } : {}),
+      })
     })
   }
   const comparable =

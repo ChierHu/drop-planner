@@ -58,6 +58,7 @@ export interface Run {
   artifacts: RunArtifact[]
   guardrailRejections: Array<{ at: string; issues: string[] }>
   submissions: number
+  catalogProducts?: number
   plan?: DropPlan
   totals?: PlanTotals
   approval?: Approval
@@ -65,4 +66,6 @@ export interface Run {
   watch?: DropWatch
   finalText?: string
   finishedAt?: string
+  /** When the drop itself was first completed; later scheduled watch turns do not move it. */
+  completedAt?: string
 }

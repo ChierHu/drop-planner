@@ -45,14 +45,19 @@ async function readJson(req: IncomingMessage): Promise<unknown> {
 }
 
 function summary(run: Run) {
+  const thumb =
+    run.plan?.skus.find((s) => s.role === 'hero' && s.image_url)?.image_url ??
+    run.artifacts.find((a) => a.contentType.startsWith('image/'))?.url
   return {
     id: run.id,
     createdAt: run.createdAt,
     status: run.status,
     storeUrl: run.brief.storeUrl,
+    brandName: run.brief.brandName,
     dropName: run.plan?.drop_name,
     cost: run.totals?.cost,
     budget: run.brief.budget,
+    thumb,
   }
 }
 

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { describeToolStart, parseArtifactResult } from '../src/timeline.js'
+import { describeToolStart, parseArtifactResult, parseCatalogCount } from '../src/timeline.js'
 
 describe('describeToolStart', () => {
   it('turns raw tool calls into merchandiser-readable steps with a phase', () => {
@@ -72,6 +72,20 @@ describe('describeToolStart', () => {
     const step = describeToolStart('some_new_tool', {})
     assert.equal(step.phase, 'other')
     assert.match(step.label, /some_new_tool/)
+  })
+})
+
+describe('parseCatalogCount', () => {
+  it('reads the product count from the kit output', () => {
+    assert.equal(
+      parseCatalogCount('CATALOG SUMMARY for https://kotn.com: 1,000 products\nCategory | n'),
+      1000,
+    )
+    assert.equal(
+      parseCatalogCount('saved 250 products to /workspace/drops/run_1/catalog.json'),
+      250,
+    )
+    assert.equal(parseCatalogCount('exec completed: exitCode=0'), undefined)
   })
 })
 

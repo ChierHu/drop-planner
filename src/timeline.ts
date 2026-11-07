@@ -144,6 +144,14 @@ export function describeToolStart(
   }
 }
 
+/** Product count printed by kit/catalog.py (fetch or analyze), if present. */
+export function parseCatalogCount(preview: string): number | undefined {
+  const match = /(?:CATALOG SUMMARY for \S+: |saved )([\d,]+) products/.exec(preview)
+  if (!match?.[1]) return undefined
+  const count = Number(match[1].replaceAll(',', ''))
+  return Number.isFinite(count) ? count : undefined
+}
+
 /** Reads an artifact_publish receipt out of a tool result preview. */
 export function parseArtifactResult(preview: string): PublishedArtifact | undefined {
   const start = preview.indexOf('{')

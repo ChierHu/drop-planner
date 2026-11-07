@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/style.css" />
@@ -16,51 +16,84 @@
     <header class="topbar">
       <div class="wordmark">
         <span class="mark">Drop Planner</span>
-        <span class="tagline">Autonomous merchandising agent · runs on ZooWork Managed Agents</span>
+        <span class="tagline">Autonomous merchandising agent · ZooWork Managed Agents</span>
       </div>
-      <div class="agent-info" id="agent-info"></div>
+      <div class="top-actions">
+        <span class="agent-info" id="agent-info"></span>
+        <button id="new-btn" type="button">+ New drop</button>
+      </div>
     </header>
     <main class="layout">
-      <aside class="sidebar">
-        <form id="brief-form" class="panel" autocomplete="off">
-          <h2>New drop brief</h2>
-          <label
-            >Brand store (Shopify)<input name="storeUrl" required value="girlfriend.com"
-          /></label>
-          <div class="row2">
-            <label>Brand name<input name="brandName" value="Girlfriend Collective" /></label>
-            <label>Launch date<input name="launchDate" type="date" required /></label>
-          </div>
-          <label
-            >Drop theme <span class="hint">optional</span
-            ><input name="dropTheme" value="Spring 2027 outdoor-to-studio capsule"
-          /></label>
-          <div class="row2">
-            <label
-              >Open-to-buy ($)<input
+      <aside class="rail">
+        <p class="rail-title">Drops</p>
+        <ul id="run-list" class="run-list"></ul>
+      </aside>
+      <section id="board" class="board"></section>
+    </main>
+
+    <dialog id="new-drop" class="modal">
+      <form id="brief-form" method="dialog" autocomplete="off">
+        <div class="modal-head">
+          <h2>New drop</h2>
+          <button type="button" class="icon-btn" id="close-modal" aria-label="Close">✕</button>
+        </div>
+        <label class="field"
+          >Shopify store<input name="storeUrl" required value="girlfriend.com"
+        /></label>
+        <div class="row2">
+          <label class="field">Launch date<input name="launchDate" type="date" required /></label>
+          <label class="field"
+            >Open-to-buy<span class="prefix"
+              ><i>$</i
+              ><input
                 name="budget"
                 type="number"
                 min="1000"
                 step="500"
                 value="60000"
-                required
+                required /></span
+          ></label>
+        </div>
+        <div class="row2">
+          <label class="field"
+            >Margin target <b id="margin-out">68%</b
+            ><input name="targetMarginPct" type="range" min="40" max="85" value="68"
+          /></label>
+          <label class="field"
+            >Styles <b id="styles-out">6</b
+            ><input name="skuCount" type="range" min="3" max="10" value="6"
+          /></label>
+        </div>
+        <div class="toggles">
+          <label class="toggle"
+            ><input type="checkbox" name="autoApprove" /><span
+              >Auto-approve within policy</span
+            ></label
+          >
+          <label class="toggle"
+            ><input type="checkbox" name="weeklyWatch" checked /><span
+              >Weekly Drop Watch</span
+            ></label
+          >
+          <label class="toggle"
+            ><input type="checkbox" name="makeTeaserVideo" /><span>Seedance teaser</span></label
+          >
+        </div>
+        <details class="more">
+          <summary>More options</summary>
+          <div class="row2">
+            <label class="field"
+              >Brand name<input name="brandName" value="Girlfriend Collective"
             /></label>
-            <label
-              >Target margin (%)<input
-                name="targetMarginPct"
-                type="number"
-                min="30"
-                max="90"
-                value="68"
-                required
+            <label class="field"
+              >Theme<input name="dropTheme" value="Spring 2027 outdoor-to-studio capsule"
             /></label>
           </div>
           <div class="row3">
-            <label>Styles<input name="skuCount" type="number" min="3" max="10" value="6" /></label>
-            <label
+            <label class="field"
               >MOQ / style<input name="minUnitsPerStyle" type="number" min="1" value="150"
             /></label>
-            <label
+            <label class="field"
               >Sell-through %<input
                 name="sellThroughPct"
                 type="number"
@@ -68,74 +101,27 @@
                 max="100"
                 value="65"
             /></label>
-          </div>
-          <div class="row2">
-            <label
-              >Markdown % on rest<input
-                name="markdownPct"
-                type="number"
-                min="0"
-                max="90"
-                value="40"
+            <label class="field"
+              >Markdown %<input name="markdownPct" type="number" min="0" max="90" value="40"
             /></label>
-            <label
-              >Buy sign-off
-              <select name="approvalMode">
-                <option value="manual">I approve the buy</option>
-                <option value="auto">Auto-approve within policy</option>
-              </select>
-            </label>
           </div>
-          <label class="check"
-            ><input type="checkbox" name="weeklyWatch" checked /> Keep watching weekly after
-            sign-off (ZooWork Schedule)</label
-          >
-          <label class="check"
-            ><input type="checkbox" name="makeTeaserVideo" /> Make a Seedance teaser video after
-            sign-off</label
-          >
-          <label
-            >Notes for the agent <span class="hint">optional</span
-            ><textarea
+          <label class="field"
+            >Notes for the agent<textarea
               name="notes"
               rows="2"
               placeholder="e.g. no denim, push extended sizes"
             ></textarea>
           </label>
+        </details>
+        <p class="form-error" id="form-error" hidden></p>
+        <div class="modal-actions">
+          <button type="button" class="ghost" id="cancel-modal">Cancel</button>
           <button type="submit" id="start-btn">Plan the drop →</button>
-          <p class="form-error" id="form-error" hidden></p>
-        </form>
-        <section class="panel">
-          <h3>Recent drops</h3>
-          <ul id="run-list" class="run-list"></ul>
-        </section>
-      </aside>
-      <section id="run-view" class="run-view">
-        <div class="intro">
-          <p class="eyebrow">One brief in. A buy-ready drop out.</p>
-          <h1>Your merchandiser that never sleeps.</h1>
-          <p class="lede">
-            Give Drop Planner a Shopify store and an open-to-buy. It reads the live catalog, studies
-            the brand's imagery, researches the season, designs a capsule with real buy math,
-            renders every style, builds the line sheet and workbook, and issues purchase orders once
-            the buy passes guardrails and your sign-off.
-          </p>
-          <ol class="how">
-            <li>
-              <b>Catalog recon</b> live products, price architecture, size scales, sell-out signal
-            </li>
-            <li>
-              <b>Brand DNA</b> vision model reads product photography; remembered in agent memory
-            </li>
-            <li><b>Trend research</b> cited web sources for the launch season</li>
-            <li><b>Capsule & buy plan</b> styles, colorways, size curves, landed cost vs budget</li>
-            <li><b>Concept renders</b> on-brand product images from reference photos</li>
-            <li><b>Line sheet</b> PDF + Excel workbook published as artifacts</li>
-            <li><b>Sign-off & POs</b> app-side guardrails, human approval, purchase orders</li>
-          </ol>
         </div>
-      </section>
-    </main>
+      </form>
+    </dialog>
+
+    <div id="tip" class="tip" hidden></div>
     <script type="module" src="/app.js"></script>
   </body>
 </html>

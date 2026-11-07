@@ -28,7 +28,7 @@ of all of it end to end, and the human stays in charge of the money.
 ## How it runs on ZooWork Managed Agents
 
 ```
-Browser (brief form, live timeline, sign-off)
+Browser (visual drop board: pipeline, sign-off, capsule, charts)
    │  polls /api/runs/:id
    ▼
 Node app (TypeScript)  ──createSession / postEvents / streamEvents (resumable cursor)──►  ZooWork Managed Agents

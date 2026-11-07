@@ -27,6 +27,7 @@ const skuSchema = {
         type: 'object',
         properties: {
           colorway: { type: 'string' },
+          hex: { type: 'string', description: 'Swatch colour of this colorway as #rrggbb' },
           sizes: { type: 'object', additionalProperties: { type: 'integer', minimum: 0 } },
         },
         required: ['colorway', 'sizes'],

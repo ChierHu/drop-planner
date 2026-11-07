@@ -15,7 +15,7 @@ import { PlanValidationError, RunStateError } from './errors.js'
 import { buildPurchaseOrders, computeTotals, validatePlan } from './plan.js'
 import type { Run } from './run-types.js'
 import type { RunStore } from './store.js'
-import { describeToolStart, parseArtifactResult } from './timeline.js'
+import { describeToolStart, parseArtifactResult, parseCatalogCount } from './timeline.js'
 import { WATCH_LABEL, watchSchedule } from './watch.js'
 
 const TERMINAL = new Set(['done', 'failed', 'stopped'])
@@ -259,6 +259,10 @@ export class RunManager {
       } else if (existing && call.phase !== 'start') {
         existing.status = call.phase === 'blocked' ? 'blocked' : call.isError ? 'error' : 'done'
         existing.endedAt = at
+        if (call.toolName === 'exec' && call.phase === 'end' && !call.isError) {
+          const count = parseCatalogCount(call.resultPreview ?? '')
+          if (count !== undefined && existing.phase === 'recon') run.catalogProducts = count
+        }
         if (call.toolName === 'artifact_publish' && call.phase === 'end' && !call.isError) {
           const artifact = parseArtifactResult(call.resultPreview ?? '')
           if (artifact && !run.artifacts.some((a) => a.artifactId === artifact.artifactId)) {
@@ -309,6 +313,7 @@ export class RunManager {
       run.status = outcome === 'succeeded' ? 'done' : outcome === 'aborted' ? 'stopped' : 'failed'
       if (outcome !== 'succeeded') run.error = run.error ?? `Run ${outcome ?? 'ended unexpectedly'}`
       run.finishedAt = at
+      if (outcome === 'succeeded' && !run.completedAt) run.completedAt = at
       for (const step of run.steps)
         if (step.status === 'running') step.status = outcome === 'succeeded' ? 'done' : 'error'
     }

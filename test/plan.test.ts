@@ -124,6 +124,21 @@ describe('validatePlan', () => {
   })
 })
 
+describe('colorway hex', () => {
+  it('keeps a valid #rrggbb swatch per colorway and drops anything else', () => {
+    const input = plan()
+    const skus = input.skus as Array<{ buy: Array<Record<string, unknown>> }>
+    const first = skus[0]?.buy[0]
+    const second = skus[1]?.buy[0]
+    if (!first || !second) throw new Error('fixture changed')
+    first.hex = '#9CAF88'
+    second.hex = 'sage'
+    const parsed = validatePlan(input, brief)
+    assert.equal(parsed.skus[0]?.buy[0]?.hex, '#9caf88')
+    assert.equal(parsed.skus[1]?.buy[0]?.hex, undefined)
+  })
+})
+
 describe('buildPurchaseOrders', () => {
   it('issues one PO per style with colour-size lines and deterministic numbers', () => {
     const pos = buildPurchaseOrders(

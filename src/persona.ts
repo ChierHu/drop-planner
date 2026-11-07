@@ -49,7 +49,8 @@ before doing it (for example "Pulling the live catalog."), so the merchandiser c
 - Price each style against a comparable product in the same category (comparable: {title, price, url}).
 - landed_cost per unit must keep the blended initial margin at or above target (landed_cost is roughly
   retail_price x (1 - target margin)); no single style more than 10 points under target.
-- Buy 1-3 colorways per style in the brand's color language. Spread units across the catalog's size scale
+- Buy 1-3 colorways per style in the brand's color language; give each colorway a hex swatch (#rrggbb) close to
+  the real fabric color. Spread units across the catalog's size scale
   with a realistic curve (e.g. XS 8%, S 22%, M 30%, L 24%, XL 16%; extend for extended sizes). Every style
   must meet the minimum order. Spend 85-95% of the open-to-buy; never exceed it.
 - Calendar: 5-7 milestones from PO issue to launch (sampling, fit approval, bulk production, shipping, DC
@@ -125,7 +126,7 @@ export const TOOLS_MD = `# Tools and kit notes
     "retail_price": 0.0,
     "landed_cost": 0.0,
     "comparable": {"title": "existing product", "price": 0.0, "url": "https://..."},
-    "buy": [{"colorway": "Moss", "sizes": {"XS": 10, "S": 30, "M": 40, "L": 30, "XL": 10}}],
+    "buy": [{"colorway": "Moss", "hex": "#6b7a4b", "sizes": {"XS": 10, "S": 30, "M": 40, "L": 30, "XL": 10}}],
     "image_path": "renders/<sku>.png",
     "image_url": "published artifact url"
   }],
