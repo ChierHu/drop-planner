@@ -1,0 +1,36 @@
+{
+  "name": "drop-planner",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Drop Planner: an autonomous fashion merchandising agent on ZooWork Managed Agents",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.web.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.web.json --noEmit",
+    "test": "node --import tsx --test test/*.test.ts",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "probe": "node --env-file-if-exists=.env --import tsx scripts/probe.ts",
+    "setup": "node --env-file-if-exists=.env --import tsx scripts/setup.ts",
+    "status": "node --env-file-if-exists=.env --import tsx scripts/status.ts",
+    "cleanup": "node --env-file-if-exists=.env --import tsx scripts/cleanup.ts",
+    "dev": "tsc -p tsconfig.web.json && node --env-file-if-exists=.env --import tsx scripts/server.ts",
+    "ask": "node --env-file-if-exists=.env --import tsx scripts/ask.ts",
+    "events": "node --env-file-if-exists=.env --import tsx scripts/events.ts"
+  },
+  "dependencies": {
+    "@zoowork-ai/sdk": "0.14.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.2",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.1"
+  }
+}
